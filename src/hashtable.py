@@ -51,7 +51,10 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        index = self._hash_mod(key)
+
+        self.storage[index] = value
+
 
 
 
@@ -63,7 +66,8 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        index = self._hash_mod(key)
+        
 
 
     def retrieve(self, key):
