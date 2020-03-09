@@ -52,9 +52,34 @@ class HashTable:
         Fill this in.
         '''
         index = self._hash_mod(key)
+        node = self.storage[index]
 
-        self.storage[index] = (key, value)
+        if node == None:
+            node = LinkedPair(key,value)
+        
+        elif node is not None and node.next is None:
 
+            #check if key is = to key if so reasign value
+            if key is key:
+                node.value = value
+            # if not key make new node and asign to next
+            else:
+                node.next = LinkedPair(key, value)
+                return 
+
+        else:
+            # iterate through ll checking keys 
+            while node.next is not None:
+
+                #reasign value if key is key 
+                if node.key is key:
+                    node.value = value
+                    return 
+
+                node = node.next
+            
+            # if key dosent equal any of the keys in the ll asign new node to end
+            node.next = LinkedPair(key, value)
 
 
 
@@ -89,7 +114,7 @@ class HashTable:
         if self.storage[index] == None or self.storage[index][0] is not key:
             return "Key not found"
             
-        print(self.storage[index])
+        print(self.storage[index][1])
 
 
     def resize(self):
@@ -100,12 +125,16 @@ class HashTable:
         Fill this in.
         '''
 
+        # double capacity of ht
         self.capacity *= 2
 
+        #grab the old storage and assign to a var
         old_storage = self.storage
 
+        #create new empty storage
         self.storage = [None] * self.capacity 
 
+        # iterate through old storage and insert key values into new storage
         for i in old_storage:
             if i is not None:
                 self.insert(i[0], i[1])
