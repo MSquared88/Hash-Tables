@@ -53,7 +53,7 @@ class HashTable:
         '''
         index = self._hash_mod(key)
 
-        self.storage[index] = value
+        self.storage[index] = (key, value)
 
 
 
@@ -67,6 +67,12 @@ class HashTable:
         Fill this in.
         '''
         index = self._hash_mod(key)
+        if self.storage[index] == None or self.storage[index][0] is not key:
+            return "Key not found"
+
+        self.storage[index] = None
+
+
         
 
 
@@ -78,7 +84,12 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        index = self._hash_mod(key)
+
+        if self.storage[index] == None or self.storage[index][0] is not key:
+            return "Key not found"
+            
+        print(self.storage[index])
 
 
     def resize(self):
@@ -88,7 +99,18 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+
+        self.capacity *= 2
+
+        old_storage = self.storage
+
+        self.storage = [None] * self.capacity 
+
+        for i in old_storage:
+            if i is not None:
+                self.insert(i[0], i[1])
+
+        
 
 
 
