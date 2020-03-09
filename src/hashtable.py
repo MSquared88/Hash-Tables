@@ -51,7 +51,39 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        index = self._hash_mod(key)
+        node = self.storage[index]
+
+        if self.storage[index] == None:
+            self.storage[index] = LinkedPair(key,value)
+
+        elif node.next == None:
+
+            #check if node key is equal to key if so reasign value
+            if node.key == key:
+                node.value = value
+
+            # if not key make new node and asign to next
+            else:
+                node.next = LinkedPair(key, value)
+                return 
+
+        else:
+            # iterate through ll checking keys 
+            while node.next is not None:
+
+                #reasign value if key is key 
+                if node.key == key:
+                    node.value = value
+                    return 
+                
+                node = node.next
+
+            if node.key == key:
+                node.value = value
+                return 
+            # if key dosent equal any of the keys in the ll asign new node to end
+            node.next = LinkedPair(key, value)
 
 
 
@@ -63,7 +95,14 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        index = self._hash_mod(key)
+        if self.storage[index] == None or self.storage[index][0] is not key:
+            return "Key not found"
+
+        self.storage[index] = None
+
+
+        
 
 
     def retrieve(self, key):
@@ -74,7 +113,30 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        index = self._hash_mod(key)
+
+        node = self.storage[index] 
+
+        if node == None:
+            return "Key not found"
+
+        if node.key == key:
+            return node.value
+        
+        if node.next is not None:
+            # iterate through ll searching for key
+            while node.next is not None:
+                if node.key == key:
+                    return node.value
+                node = node.next
+            if node.key == key:
+                return node.value
+
+        return "Key not found"
+
+        
+        
+            
 
 
     def resize(self):
@@ -84,7 +146,24 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        # double capacity of ht
+        self.capacity *= 2
+
+        #grab the old storage and assign to a var
+        old_storage = self.storage
+
+        #create new empty storage
+        self.storage = [None] * self.capacity 
+
+        # iterate through old storage and insert key values into new storage
+        node = None
+        for old_item in old_storage:
+            node = old_item
+            while node is not None:
+                self.insert(node.key, node.value)
+                node = node.next
+
+        
 
 
 
@@ -94,13 +173,15 @@ if __name__ == "__main__":
     ht.insert("line_1", "Tiny hash table")
     ht.insert("line_2", "Filled beyond capacity")
     ht.insert("line_3", "Linked list saves the day!")
-
+    
     print("")
 
     # Test storing beyond capacity
     print(ht.retrieve("line_1"))
     print(ht.retrieve("line_2"))
     print(ht.retrieve("line_3"))
+
+
 
     # Test resizing
     old_capacity = len(ht.storage)
