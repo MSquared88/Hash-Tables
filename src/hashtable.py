@@ -70,15 +70,11 @@ class HashTable:
 
         else:
             # iterate through ll checking keys 
-            while node.next is not None:
+            while node.next is not None and node.key != key:
 
-                #reasign value if key is key 
-                if node.key == key:
-                    node.value = value
-                    return 
-                
                 node = node.next
 
+            #reasign value if key is key 
             if node.key == key:
                 node.value = value
                 return 
@@ -90,21 +86,24 @@ class HashTable:
     def remove(self, key):
         '''
         Remove the value stored with the given key.
-
         Print a warning if the key is not found.
-
         Fill this in.
         '''
         index = self._hash_mod(key)
-        if self.storage[index] == None or self.storage[index][0] is not key:
-            return "Key not found"
+        node = self.storage[index]
+        next_node = None
+        while node is not None and node.key != key:
+            next_node = node
+            node = next_node.next
+        if node is None:
+            return 'key not found'
+        else:
+            if next_node is None: 
+                self.storage[index] = node.next
+            else:
+                next_node.next = node.next
 
-        self.storage[index] = None
-
-
-        
-
-
+            
     def retrieve(self, key):
         '''
         Retrieve the value stored with the given key.
@@ -118,21 +117,21 @@ class HashTable:
         node = self.storage[index] 
 
         if node == None:
-            return "Key not found"
+            return None
 
         if node.key == key:
             return node.value
         
         if node.next is not None:
             # iterate through ll searching for key
-            while node.next is not None:
-                if node.key == key:
-                    return node.value
+            while node.next is not None and node.key != key:
+
                 node = node.next
+            
             if node.key == key:
                 return node.value
 
-        return "Key not found"
+        return None
 
         
         
@@ -173,6 +172,12 @@ if __name__ == "__main__":
     ht.insert("line_1", "Tiny hash table")
     ht.insert("line_2", "Filled beyond capacity")
     ht.insert("line_3", "Linked list saves the day!")
+    ht.insert("line_4", "Linked list saves the day 2!")
+    ht.insert("line_5", "Linked list saves the day! 3")
+    ht.insert("line_6", "Linked list saves the day! 4")
+    ht.insert("line_7", "Linked list saves the day! 5")
+    ht.insert("line_8", "Linked list saves the day! 6")
+
     
     print("")
 
@@ -180,6 +185,13 @@ if __name__ == "__main__":
     print(ht.retrieve("line_1"))
     print(ht.retrieve("line_2"))
     print(ht.retrieve("line_3"))
+
+
+    print(ht.remove("line_3"))
+    print(ht.remove("line_5"))
+    print(ht.remove("line_8"))
+
+    print("")
 
 
 
